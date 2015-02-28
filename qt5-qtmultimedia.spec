@@ -57,6 +57,9 @@ Window System. Qt is written in C++ and is fully object-oriented.
 %_qt5_plugindir/audio/*.so
 %_qt5_plugindir/mediaservice/*.so
 %_qt5_plugindir/playlistformats/*.so
+%ifarch %arm
+%_qt5_plugindir/videonode/*.so
+%endif
 %_qt5_prefix/qml/QtAudioEngine
 %_qt5_prefix/qml/QtMultimedia
 
@@ -131,6 +134,9 @@ Devel files needed to build apps based on QtVersit.
 
 %files -n %{qtmultimediawidgetsd}
 %{_qt5_libdir}/cmake/Qt5MultimediaWidgets
+%ifarch %arm
+%{_qt5_libdir}/cmake/Qt5Quick/Qt5Quick_QSGVideoNodeFactory_EGL.cmake
+%endif
 %{_qt5_includedir}/QtMultimediaWidgets
 %exclude %{_qt5_includedir}/QtMultimediaWidgets/%qtversion
 %{_qt5_libdir}/libQt5MultimediaWidgets.so
