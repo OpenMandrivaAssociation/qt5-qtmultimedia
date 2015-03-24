@@ -1,15 +1,10 @@
 %define qgstmajor 1
 
-%define api 5
+%define api %(echo %{version} |cut -d. -f1)
 %define major %api
+%define beta alpha
 
-%define api 5
-%define qtminor 4
-%define qtsubminor 1
-
-%define qtversion %{api}.%{qtminor}.%{qtsubminor}
-
-%define qttarballdir qtmultimedia-opensource-src-%{qtversion}
+%define qttarballdir qtmultimedia-opensource-src-%{version}%{?beta:-%{beta}}
 
 %define qgsttools_p %mklibname qgsttools_p %{qgstmajor}
 %define qgsttools_p_d %mklibname qgsttools_p -d
@@ -28,13 +23,18 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	%{qtversion}
+Version:	5.5.0
+%if "%{beta}" != ""
+Release:	0.%{beta}.1
+Source0:	http://download.qt.io/development_releases/qt/%(echo %{version} |cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
+%else
 Release:	1
+Source0:	http://download.qt.io/official_releases/qt/%(echo %{version} |cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
+%endif
 Summary:	Qt GUI toolkit
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt-project.org
-Source0:	http://download.qt-project.org/official_releases/qt/%{api}.%{qtminor}/%{version}/submodules/%{qttarballdir}.tar.xz
 Patch0:		0006-GStreamer-port-to-1.0.patch
 BuildRequires:	qt5-qtbase-devel = %version
 BuildRequires:	pkgconfig(alsa)
@@ -88,7 +88,7 @@ Devel files needed to build apps based on QtVersit.
 %files -n %{qtmultimediad}
 %{_qt5_libdir}/cmake/Qt5Multimedia
 %{_qt5_includedir}/QtMultimedia
-%exclude %{_qt5_includedir}/QtMultimedia/%qtversion
+%exclude %{_qt5_includedir}/QtMultimedia/%version
 %{_qt5_libdir}/libQt5Multimedia.so
 %{_qt5_libdir}/libQt5Multimedia.prl
 %{_qt5_libdir}/pkgconfig/Qt5Multimedia.pc
@@ -107,7 +107,7 @@ Provides: qt5-qtmultimedia-private-devel = %version
 Devel files needed to build apps based on QtVersit.
 
 %files -n %{qtmultimedia_p_d}
-%{_qt5_includedir}/QtMultimedia/%qtversion
+%{_qt5_includedir}/QtMultimedia/%version
 %{_qt5_prefix}/mkspecs/modules/qt_lib_multimedia_private.pri
 
 #------------------------------------------------------------------------------
@@ -138,7 +138,7 @@ Devel files needed to build apps based on QtVersit.
 %{_qt5_libdir}/cmake/Qt5Quick/Qt5Quick_QSGVideoNodeFactory_EGL.cmake
 %endif
 %{_qt5_includedir}/QtMultimediaWidgets
-%exclude %{_qt5_includedir}/QtMultimediaWidgets/%qtversion
+%exclude %{_qt5_includedir}/QtMultimediaWidgets/%version
 %{_qt5_libdir}/libQt5MultimediaWidgets.so
 %{_qt5_libdir}/libQt5MultimediaWidgets.prl
 %{_qt5_libdir}/pkgconfig/Qt5MultimediaWidgets.pc
@@ -157,7 +157,7 @@ Provides: qt5-qtmultimediawidgets-private-devel = %version
 Devel files needed to build apps based on QtVersit.
 
 %files -n %{qtmultimediawidgets_p_d}
-%{_qt5_includedir}/QtMultimediaWidgets/%qtversion
+%{_qt5_includedir}/QtMultimediaWidgets/%version
 %{_qt5_prefix}/mkspecs/modules/qt_lib_multimediawidgets_private.pri
 
 #------------------------------------------------------------------------------
