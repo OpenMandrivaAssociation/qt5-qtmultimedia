@@ -35,7 +35,6 @@ Summary:	Qt GUI toolkit
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
 URL:		http://www.qt-project.org
-Patch0:		0006-GStreamer-port-to-1.0.patch
 BuildRequires:	qt5-qtbase-devel = %version
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(libpulse)
