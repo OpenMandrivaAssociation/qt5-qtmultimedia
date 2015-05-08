@@ -25,7 +25,7 @@
 Name:		qt5-qtmultimedia
 Version:	5.5.0
 %if "%{beta}" != ""
-Release:	0.%{beta}.1
+Release:	0.%{beta}.2
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version} |cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
@@ -79,7 +79,8 @@ Qt%{api} Lib.
 %package -n %{qtmultimediad}
 Summary: Devel files needed to build apps based on QtVersit
 Group:    Development/KDE and Qt
-Requires: %{qtmultimedia} = %version
+Requires: %{qtmultimedia} = %{version}
+Requires: %{name} = %{version}
 
 %description -n %{qtmultimediad}
 Devel files needed to build apps based on QtVersit.
