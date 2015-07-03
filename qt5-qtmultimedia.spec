@@ -2,7 +2,7 @@
 
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta rc
+%define beta %nil
 
 %define qttarballdir qtmultimedia-opensource-src-%{version}%{?beta:-%{beta}}
 
@@ -25,10 +25,10 @@
 Name:		qt5-qtmultimedia
 Version:	5.5.0
 %if "%{beta}" != ""
-$1.%{beta}.1
+Release:	1.%{beta}.1
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version} |cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-$1
+Release:	1
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version} |cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
 Summary:	Qt GUI toolkit
