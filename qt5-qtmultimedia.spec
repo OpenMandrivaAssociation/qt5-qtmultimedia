@@ -2,7 +2,7 @@
 
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %nil
+%define beta
 
 %define qttarballdir qtmultimedia-opensource-src-%{version}%{?beta:-%{beta}}
 
