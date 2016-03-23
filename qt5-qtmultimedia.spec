@@ -21,13 +21,13 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	5.5.1
+Version:	5.6.0
 %if "%{beta}" != ""
-Release:	1.%{beta}.1
+Release:	0.%{beta}.1
 %define qttarballdir qtmultimedia-opensource-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	3
+Release:	1
 %define qttarballdir qtmultimedia-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -212,7 +212,6 @@ Devel files needed to build apps based on QtVersit.
 %{_qt5_libdir}/libQt5MultimediaQuick_p.prl
 %{_qt5_libdir}/libQt5MultimediaQuick_p.so
 %{_qt5_includedir}/QtMultimediaQuick_p
-%{_qt5_libdir}/pkgconfig/Qt5MultimediaQuick_p.pc
 %{_qt5_prefix}/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri
 
 #------------------------------------------------------------------------------
