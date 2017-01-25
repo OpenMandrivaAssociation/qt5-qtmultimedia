@@ -2,7 +2,7 @@
 
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta rc
+%define beta %{nil}
 
 %define qgsttools_p %mklibname qgsttools_p %{qgstmajor}
 %define qgsttools_p_d %mklibname qgsttools_p -d
