@@ -2,7 +2,7 @@
 
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %nil
+%define beta %{nil}
 
 %define qgsttools_p %mklibname qgsttools_p %{qgstmajor}
 %define qgsttools_p_d %mklibname qgsttools_p -d
@@ -21,13 +21,13 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	5.6.2
+Version:	5.8.0
 %if "%{beta}" != ""
-Release:	1.%{beta}.1
+Release:	0.%{beta}.1
 %define qttarballdir qtmultimedia-opensource-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	1
+Release:	2
 %define qttarballdir qtmultimedia-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -237,3 +237,7 @@ popd
 
 # .la and .a files, die, die, die.
 rm -f %{buildroot}%{_qt5_libdir}/lib*.la
+
+# Don't create bogus dependencies
+# (QT.multimedia.uses = pulseaudio results in "Project ERROR: Library 'pulseaudio' is not defined." while building qtdeclarative)
+sed -i -e 's,^QT.multimedia.uses = pulse,# QT.multimedia.uses = pulse,' %{buildroot}%{_libdir}/qt5/mkspecs/modules/qt_lib_multimedia.pri
