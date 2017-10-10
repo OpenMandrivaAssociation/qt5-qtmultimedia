@@ -1,15 +1,19 @@
-%define qgstmajor 1
-
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %{nil}
+%define beta beta
 
-%define qgsttools_p %mklibname qgsttools_p %{qgstmajor}
+%define qtgsttools %mklibname qt%{api}multimediagsttools %{major}
+%define qtgsttools_d %mklibname qt%{api}multimediagsttools -d
+
+%define qgsttools_p %mklibname qgsttools_p 1
 %define qgsttools_p_d %mklibname qgsttools_p -d
 
 %define qtmultimedia %mklibname qt%{api}multimedia %{major}
 %define qtmultimediad %mklibname qt%{api}multimedia -d
 %define qtmultimedia_p_d %mklibname qt%{api}multimedia-private -d
+
+%define qtmultimediaquick %mklibname qt%{api}multimediaquick %{major}
+%define qtmultimediaquick_d %mklibname qt%{api}multimediaquick -d
 
 %define qtmultimediaquick_p %mklibname qt%{api}multimediaquick_p %{major}
 %define qtmultimediaquick_p_d %mklibname qt%{api}multimediaquick_p -d
@@ -21,10 +25,10 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	5.9.2
+Version:	5.10.0
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
-%define qttarballdir qtmultimedia-opensource-src-%{version}-%{beta}
+%define qttarballdir qtmultimedia-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
@@ -156,57 +160,63 @@ Devel files needed to build apps based on QtVersit.
 
 #------------------------------------------------------------------------------
 
-%package -n %{qgsttools_p}
+%package -n %{qtgsttools}
 Summary: Qt%{api} Lib
 Group: System/Libraries
+Obsoletes: %{qgsttools_p} < %{EVRD}
 
-%description -n %{qgsttools_p}
+%description -n %{qtgsttools}
 Qt%{api} Lib.
 
-%files -n %{qgsttools_p}
-%{_qt5_libdir}/libqgsttools_p.so.%{qgstmajor}*
+%files -n %{qtgsttools}
+%{_qt5_libdir}/libQt%{api}MultimediaGstTools.so.%{major}*
 
 #------------------------------------------------------------------------------
 
-%package -n %{qgsttools_p_d}
+%package -n %{qtgsttools_d}
 Summary: Devel files needed to build apps based on QtVersit
 Group:    Development/KDE and Qt
-Requires: %{qgsttools_p} = %version
+Requires: %{qtgsttools} = %{EVRD}
+Obsoletes: %{qgsttools_p_d} < %{EVRD}
 
-%description -n %{qgsttools_p_d}
+%description -n %{qtgsttools_d}
 Devel files needed to build apps based on QtVersit.
 
-%files -n %{qgsttools_p_d}
-%{_qt5_libdir}/libqgsttools_p.prl
-%{_qt5_libdir}/libqgsttools_p.so
+%files -n %{qtgsttools_d}
+%{_includedir}/qt5/QtMultimediaGstTools
+%{_qt5_libdir}/libQt%{api}MultimediaGstTools.prl
+%{_qt5_libdir}/libQt%{api}MultimediaGstTools.so
+%{_libdir}/qt5/mkspecs/modules/qt_lib_multimediagsttools_private.pri
 
 #------------------------------------------------------------------------------
 
-%package -n %{qtmultimediaquick_p}
+%package -n %{qtmultimediaquick}
 Summary: Qt%{api} Lib
 Group: System/Libraries
+Obsoletes: %{qtmultimediaquick_p} < %{EVRD}
 
-%description -n %{qtmultimediaquick_p}
+%description -n %{qtmultimediaquick}
 Qt%{api} Lib.
 
-%files -n %{qtmultimediaquick_p}
-%{_qt5_libdir}/libQt5MultimediaQuick_p.so.%{api}*
+%files -n %{qtmultimediaquick}
+%{_qt5_libdir}/libQt5MultimediaQuick.so.%{api}*
 
 #------------------------------------------------------------------------------
 
-%package -n %{qtmultimediaquick_p_d}
+%package -n %{qtmultimediaquick_d}
 Summary: Devel files needed to build apps based on QtVersit
 Group:    Development/KDE and Qt
-Requires: %{qgsttools_p} = %version
+Requires: %{qtgsttools} = %{EVRD}
+Obsoletes: %{qtmultimediaquick_p_d} < %{EVRD}
 
-%description -n %{qtmultimediaquick_p_d}
-Devel files needed to build apps based on QtVersit.
+%description -n %{qtmultimediaquick_d}
+Devel files needed to build apps based on QtMultimedia Quick.
 
-%files -n %{qtmultimediaquick_p_d}
-%{_qt5_libdir}/libQt5MultimediaQuick_p.prl
-%{_qt5_libdir}/libQt5MultimediaQuick_p.so
-%{_qt5_includedir}/QtMultimediaQuick_p
-%{_qt5_prefix}/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri
+%files -n %{qtmultimediaquick_d}
+%{_qt5_libdir}/libQt5MultimediaQuick.prl
+%{_qt5_libdir}/libQt5MultimediaQuick.so
+%{_qt5_includedir}/QtMultimediaQuick
+%{_libdir}/qt5/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri
 
 #------------------------------------------------------------------------------
 
