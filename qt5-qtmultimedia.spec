@@ -50,6 +50,8 @@ BuildRequires:	pkgconfig(Qt5Core) = %version
 BuildRequires:	pkgconfig(Qt5Gui) = %version
 BuildRequires:	pkgconfig(Qt5Qml) = %version
 BuildRequires:	pkgconfig(Qt5Quick) = %version
+# For the Provides: generator
+BuildRequires:	cmake >= 3.11.0-1
 
 %description
 Qt is a GUI software toolkit which simplifies the task of writing and
