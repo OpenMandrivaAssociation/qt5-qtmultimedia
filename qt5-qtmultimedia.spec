@@ -223,17 +223,16 @@ Devel files needed to build apps based on QtMultimedia Quick.
 #------------------------------------------------------------------------------
 
 %prep
-%setup -q -n %qttarballdir
-%apply_patches
+%autosetup -n %qttarballdir -p1
 
 %build
 %qmake_qt5 GST_VERSION=1.0
 
 #------------------------------------------------------------------------------
-%make
+%make_build
 
 %install
-%makeinstall_std INSTALL_ROOT=%{buildroot}
+%make_install INSTALL_ROOT=%{buildroot}
 
 ## .prl/.la file love
 # nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
