@@ -1,4 +1,5 @@
 removed_sources:
   qtmultimedia-opensource-src-5.9.2.tar.xz: 1029e33d8e549e140ff45d54c3ea57bb700ddfab
-sources:
   qtmultimedia-opensource-src-5.9.6.tar.xz: cdbac3c3c753b23fd169e387e9257ac738857be4
+sources:
+  qtmultimedia-opensource-src-5.9.7.tar.xz: 54da94957cae1f1b04c3017c7b6ebb67094c7faf
