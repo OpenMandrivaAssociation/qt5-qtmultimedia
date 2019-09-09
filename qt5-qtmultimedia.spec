@@ -25,13 +25,13 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	5.13.0
+Version:	5.13.1
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtmultimedia-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%(echo %{beta} |sed -e "s,1$,,")/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	2
+Release:	1
 %define qttarballdir qtmultimedia-everywhere-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
@@ -189,6 +189,7 @@ Devel files needed to build apps based on QtVersit.
 %{_qt5_libdir}/libQt%{api}MultimediaGstTools.prl
 %{_qt5_libdir}/libQt%{api}MultimediaGstTools.so
 %{_libdir}/qt5/mkspecs/modules/qt_lib_multimediagsttools_private.pri
+%{_libdir}/cmake/Qt5MultimediaGstTools
 
 #------------------------------------------------------------------------------
 
@@ -219,6 +220,7 @@ Devel files needed to build apps based on QtMultimedia Quick.
 %{_qt5_libdir}/libQt5MultimediaQuick.so
 %{_qt5_includedir}/QtMultimediaQuick
 %{_libdir}/qt5/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri
+%{_libdir}/cmake/Qt5MultimediaQuick
 
 #------------------------------------------------------------------------------
 
