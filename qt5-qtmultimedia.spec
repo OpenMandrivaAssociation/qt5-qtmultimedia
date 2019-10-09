@@ -1,6 +1,6 @@
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta %{nil}
+%define beta beta1
 
 %define qtgsttools %mklibname qt%{api}multimediagsttools %{major}
 %define qtgsttools_d %mklibname qt%{api}multimediagsttools -d
@@ -25,11 +25,11 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	5.13.1
+Version:	5.14.0
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtmultimedia-everywhere-src-%{version}-%{beta}
-Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%(echo %{beta} |sed -e "s,1$,,")/submodules/%{qttarballdir}.tar.xz
+Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
 %define qttarballdir qtmultimedia-everywhere-src-%{version}
