@@ -1,6 +1,6 @@
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
-%define beta beta3
+%define beta rc
 
 %define qtgsttools %mklibname qt%{api}multimediagsttools %{major}
 %define qtgsttools_d %mklibname qt%{api}multimediagsttools -d
