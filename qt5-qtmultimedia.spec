@@ -46,6 +46,7 @@ BuildRequires:	pkgconfig(openal)
 BuildRequires:	pkgconfig(gstreamer-1.0)
 BuildRequires:	pkgconfig(gstreamer-plugins-base-1.0)
 BuildRequires:	gstreamer-plugins-base-devel
+BuildRequires:	pkgconfig(wayland-client)
 BuildRequires:	pkgconfig(Qt5Core) = %version
 BuildRequires:	pkgconfig(Qt5Gui) = %version
 BuildRequires:	pkgconfig(Qt5Qml) = %version
