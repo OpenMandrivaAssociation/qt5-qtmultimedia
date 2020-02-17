@@ -51,6 +51,8 @@ BuildRequires:	pkgconfig(Qt5Core) = %version
 BuildRequires:	pkgconfig(Qt5Gui) = %version
 BuildRequires:	pkgconfig(Qt5Qml) = %version
 BuildRequires:	pkgconfig(Qt5Quick) = %version
+# FIXME the autogenerator doesn't see the correct version number
+Provides:	qml(QtMultimedia) = %version
 # For the Provides: generator
 BuildRequires:	cmake >= 3.11.0-1
 
@@ -65,6 +67,18 @@ Window System. Qt is written in C++ and is fully object-oriented.
 %_qt5_plugindir/playlistformats/*.so
 %_qt5_prefix/qml/QtAudioEngine
 %_qt5_prefix/qml/QtMultimedia
+
+#------------------------------------------------------------------------------
+%package examples
+Summary: Examples for the QtMultimedia engine
+Group: Documentation
+
+%description examples
+Examples for the QtMultimedia engine
+
+%files examples
+%{_qt5_exampledir}/multimedia
+%{_qt5_exampledir}/multimediawidgets
 
 #------------------------------------------------------------------------------
 
@@ -96,7 +110,6 @@ Devel files needed to build apps based on QtVersit.
 %{_qt5_libdir}/libQt5Multimedia.so
 %{_qt5_libdir}/libQt5Multimedia.prl
 %{_qt5_libdir}/pkgconfig/Qt5Multimedia.pc
-%{_qt5_exampledir}/multimedia
 %{_qt5_prefix}/mkspecs/modules/qt_lib_multimedia.pri
 
 #------------------------------------------------------------------------------
@@ -143,7 +156,6 @@ Devel files needed to build apps based on QtVersit.
 %{_qt5_libdir}/libQt5MultimediaWidgets.so
 %{_qt5_libdir}/libQt5MultimediaWidgets.prl
 %{_qt5_libdir}/pkgconfig/Qt5MultimediaWidgets.pc
-%{_qt5_exampledir}/multimediawidgets
 %{_qt5_prefix}/mkspecs/modules/qt_lib_multimediawidgets.pri
 
 #------------------------------------------------------------------------------
