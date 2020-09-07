@@ -62,9 +62,12 @@ maintaining GUI (Graphical User Interface) applications for the X
 Window System. Qt is written in C++ and is fully object-oriented.
 
 %files
-%_qt5_plugindir/audio/*.so
-%_qt5_plugindir/mediaservice/*.so
-%_qt5_plugindir/playlistformats/*.so
+%_qt5_plugindir/audio
+%_qt5_plugindir/mediaservice
+%_qt5_plugindir/playlistformats
+# This exists if Qt is built with OpenGL ES support, but not
+# with OpenGL desktop
+%optional %_qt5_plugindir/video
 %_qt5_prefix/qml/QtAudioEngine
 %_qt5_prefix/qml/QtMultimedia
 
