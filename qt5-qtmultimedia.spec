@@ -22,6 +22,9 @@
 %define qtmultimediawidgetsd %mklibname qt%{api}multimediawidgets -d
 %define qtmultimediawidgets_p_d %mklibname qt%{api}multimediawidgets-private -d
 
+%define qtmultimediaavplayer %mklibname qt%{api}multimediaavplayer %{major}
+%define qtmultimediaavplayerd %mklibname qt%{api}multimediaavplayer -d
+
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
@@ -31,10 +34,16 @@ Release:	0.%{beta}.1
 %define qttarballdir qtmultimedia-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	1
+Release:	2
 %define qttarballdir qtmultimedia-everywhere-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
+# Introduce an alternative to ****ing dreadful gstreamer crap
+# that can't even handle the pinephone camera
+# https://codereview.qt-project.org/c/qt/qtmultimedia/+/305276
+Patch0:		bcc261c.diff
+# And make it compile...
+Patch1:		qtavplayer-fix-build.patch
 Summary:	Qt GUI toolkit
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -55,6 +64,17 @@ BuildRequires:	pkgconfig(Qt5Quick) = %version
 Provides:	qml(QtMultimedia) = %version
 # For the Provides: generator
 BuildRequires:	cmake >= 3.11.0-1
+# For AVPlayer
+BuildRequires:	pkgconfig(libavcodec)
+BuildRequires:	pkgconfig(libavformat)
+BuildRequires:	pkgconfig(libavutil)
+BuildRequires:	pkgconfig(libswresample)
+BuildRequires:	pkgconfig(libva-x11)
+BuildRequires:	pkgconfig(libva-drm)
+BuildRequires:	pkgconfig(libva)
+BuildRequires:	pkgconfig(egl)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(libpulse)
 
 %description
 Qt is a GUI software toolkit which simplifies the task of writing and
@@ -223,7 +243,7 @@ Qt%{api} Lib.
 #------------------------------------------------------------------------------
 
 %package -n %{qtmultimediaquick_d}
-Summary: Devel files needed to build apps based on QtVersit
+Summary: Devel files needed to build apps based on QtMultimedia Quick
 Group:    Development/KDE and Qt
 Requires: %{qtgsttools} = %{EVRD}
 Obsoletes: %{qtmultimediaquick_p_d} < %{EVRD}
@@ -239,15 +259,47 @@ Devel files needed to build apps based on QtMultimedia Quick.
 %{_libdir}/cmake/Qt5MultimediaQuick
 
 #------------------------------------------------------------------------------
+%package -n %{qtmultimediaavplayer}
+Summary: Qt%{api} multimedia lib with FFMPEG backend
+Group: System/Libraries
+
+%description -n %{qtmultimediaavplayer}
+Qt%{api} multimedia lib with FFMPEG backend.
+
+%files -n %{qtmultimediaavplayer}
+%{_libdir}/libQt5MultimediaAVPlayer.so.5*
+
+%package -n %{qtmultimediaavplayerd}
+Summary: Devel files needed to build apps based on QtMultimediaAVPlayer
+Group:    Development/KDE and Qt
+Requires: %{qtmultimediaavplayer} = %{EVRD}
+Requires: %{qtmultimediawidgetsd} = %{EVRD}
+
+%description -n %{qtmultimediaavplayerd}
+Devel files needed to build apps based on QtMultimediaAVPlayer
+
+%files -n %{qtmultimediaavplayerd}
+%{_qt5_includedir}/QtMultimediaAVPlayer
+%{_libdir}/cmake/Qt5MultimediaAVPlayer/Qt5MultimediaAVPlayerConfig.cmake
+%{_libdir}/cmake/Qt5MultimediaAVPlayer/Qt5MultimediaAVPlayerConfigVersion.cmake
+%{_libdir}/libQt5MultimediaAVPlayer.prl
+%{_libdir}/libQt5MultimediaAVPlayer.so
+%{_libdir}/qt5/mkspecs/modules/qt_lib_multimediaavplayer_private.pri
+
+#------------------------------------------------------------------------------
+
 
 %prep
 %autosetup -n %qttarballdir -p1
+# Needed after introducing extra headers from Patch0
+%{_libdir}/qt5/bin/syncqt.pl -version %{version}
 
-%build
 %qmake_qt5 GST_VERSION=1.0
 
-#------------------------------------------------------------------------------
-%make_build
+%build
+# "|| make" is a workaround for Makefiles that aren't 100% SMP clean
+# needed as of 5.15.2 with the avplayer patch
+%make_build || make
 
 %install
 %make_install INSTALL_ROOT=%{buildroot}
