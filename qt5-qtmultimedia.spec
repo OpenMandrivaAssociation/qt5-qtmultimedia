@@ -28,15 +28,15 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	5.15.2
+Version:	5.15.3
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtmultimedia-everywhere-src-%{version}-%{beta}
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
-Release:	2
-%define qttarballdir qtmultimedia-everywhere-src-%{version}
-Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
+Release:	1
+%define qttarballdir qtmultimedia-everywhere-src-5.15.2
+Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
 %endif
 # Introduce an alternative to ****ing dreadful gstreamer crap
 # that can't even handle the pinephone camera
@@ -44,6 +44,10 @@ Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f
 Patch0:		bcc261c.diff
 # And make it compile...
 Patch1:		qtavplayer-fix-build.patch
+# Patches from KDE
+Patch1000:	0001-Bump-version.patch
+# We don't want this one -- it only works around Windoze bugs
+#Patch1002:	0003-Revert-Map-QVideoFrame-Format_Y8-QImage-Format_Grays.patch
 Summary:	Qt GUI toolkit
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
