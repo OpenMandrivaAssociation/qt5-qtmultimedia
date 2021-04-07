@@ -1,3 +1,9 @@
+%ifarch %{aarch64}
+%bcond_with avplayer
+%else
+%bcond_without avplayer
+%endif
+
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
 %define beta %{nil}
@@ -41,9 +47,9 @@ Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f
 # Introduce an alternative to ****ing dreadful gstreamer crap
 # that can't even handle the pinephone camera
 # https://codereview.qt-project.org/c/qt/qtmultimedia/+/305276
-Patch0:		bcc261c.diff
+Source100:	bcc261c.diff
 # And make it compile...
-Patch1:		qtavplayer-fix-build.patch
+Source101:	qtavplayer-fix-build.patch
 # Patches from KDE
 Patch1000:	0001-Bump-version.patch
 # We don't want this one -- it only works around Windoze bugs
@@ -68,7 +74,7 @@ BuildRequires:	pkgconfig(Qt5Quick) = %version
 Provides:	qml(QtMultimedia) = %version
 # For the Provides: generator
 BuildRequires:	cmake >= 3.11.0-1
-# For AVPlayer
+%if %{with vaplayer}
 BuildRequires:	pkgconfig(libavcodec)
 BuildRequires:	pkgconfig(libavformat)
 BuildRequires:	pkgconfig(libavutil)
@@ -80,6 +86,7 @@ BuildRequires:	pkgconfig(libva)
 BuildRequires:	pkgconfig(egl)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(libpulse)
+%endif
 
 %description
 Qt is a GUI software toolkit which simplifies the task of writing and
@@ -264,6 +271,7 @@ Devel files needed to build apps based on QtMultimedia Quick.
 %{_libdir}/cmake/Qt5MultimediaQuick
 
 #------------------------------------------------------------------------------
+%if %{with vaplayer}
 %package -n %{qtmultimediaavplayer}
 Summary: Qt%{api} multimedia lib with FFMPEG backend
 Group: System/Libraries
@@ -290,12 +298,17 @@ Devel files needed to build apps based on QtMultimediaAVPlayer
 %{_libdir}/libQt5MultimediaAVPlayer.prl
 %{_libdir}/libQt5MultimediaAVPlayer.so
 %{_libdir}/qt5/mkspecs/modules/qt_lib_multimediaavplayer_private.pri
-
+%endif
 #------------------------------------------------------------------------------
 
 
 %prep
 %autosetup -n %qttarballdir -p1
+%if %{with avplayer}
+patch -p1 -z .avp1~ -b <%{S:100}
+patch -p1 -z .avp2~ -b <%{S:101}
+%endif
+
 # Needed after introducing extra headers from Patch0
 %{_libdir}/qt5/bin/syncqt.pl -version %{version}
 
