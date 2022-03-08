@@ -41,8 +41,8 @@ Release:	0.%{beta}.1
 Source0:	http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 %else
 Release:	1
-%define qttarballdir qtmultimedia-everywhere-src-5.15.2
-Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
+%define qttarballdir qtmultimedia-everywhere-opensource-src-%{version}
+Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
 # Introduce an alternative to ****ing dreadful gstreamer crap
 # that can't even handle the pinephone camera
@@ -50,10 +50,10 @@ Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f
 Source100:	bcc261c.diff
 # And make it compile...
 Source101:	qtavplayer-fix-build.patch
+# With ffmpeg 5.0 too
+Source102:	qtmultimedia-avplayer-ffmpeg-5.0.patch
 # Patches from KDE
-Patch1000:	0001-Bump-version.patch
-# We don't want this one -- it only works around Windoze bugs
-#Patch1002:	0003-Revert-Map-QVideoFrame-Format_Y8-QImage-Format_Grays.patch
+# [Currently none required]
 Summary:	Qt GUI toolkit
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
@@ -74,7 +74,7 @@ BuildRequires:	pkgconfig(Qt5Quick) = %version
 Provides:	qml(QtMultimedia) = %version
 # For the Provides: generator
 BuildRequires:	cmake >= 3.11.0-1
-%if %{with vaplayer}
+%if %{with avplayer}
 BuildRequires:	pkgconfig(libavcodec)
 BuildRequires:	pkgconfig(libavformat)
 BuildRequires:	pkgconfig(libavutil)
@@ -271,7 +271,7 @@ Devel files needed to build apps based on QtMultimedia Quick.
 %{_libdir}/cmake/Qt5MultimediaQuick
 
 #------------------------------------------------------------------------------
-%if %{with vaplayer}
+%if %{with avplayer}
 %package -n %{qtmultimediaavplayer}
 Summary: Qt%{api} multimedia lib with FFMPEG backend
 Group: System/Libraries
@@ -303,10 +303,11 @@ Devel files needed to build apps based on QtMultimediaAVPlayer
 
 
 %prep
-%autosetup -n %qttarballdir -p1
+%autosetup -n %(echo %qttarballdir |sed -e 's,-opensource,,') -p1
 %if %{with avplayer}
 patch -p1 -z .avp1~ -b <%{S:100}
 patch -p1 -z .avp2~ -b <%{S:101}
+patch -p1 -z .avp2~ -b <%{S:102}
 %endif
 
 # Needed after introducing extra headers from Patch0

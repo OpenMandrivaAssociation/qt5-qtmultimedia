@@ -1,0 +1,102 @@
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavaudiocodec.cpp.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavaudiocodec.cpp
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavaudiocodec.cpp.omv~	2022-03-08 19:52:23.303477272 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavaudiocodec.cpp	2022-03-08 19:52:33.568212781 +0100
+@@ -43,6 +43,7 @@
+ 
+ extern "C" {
+ #include <libavformat/avformat.h>
++#include <libavcodec/avcodec.h>
+ }
+ 
+ QT_BEGIN_NAMESPACE
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec.cpp.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec.cpp
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec.cpp.omv~	2022-03-08 19:49:55.409285640 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec.cpp	2022-03-08 19:51:09.054389851 +0100
+@@ -44,6 +44,7 @@
+ 
+ extern "C" {
+ #include <libavformat/avformat.h>
++#include <libavcodec/avcodec.h>
+ #include <libavutil/opt.h>
+ }
+ 
+@@ -117,7 +118,7 @@ AVCodecContext *QAVCodec::avctx() const
+     return d_func()->avctx;
+ }
+ 
+-AVCodec *QAVCodec::codec() const
++const AVCodec *QAVCodec::codec() const
+ {
+     return d_func()->codec;
+ }
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p.h.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p.h
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p.h.omv~	2022-03-08 19:50:28.253440325 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p.h	2022-03-08 19:50:44.699016963 +0100
+@@ -70,7 +70,7 @@ public:
+     bool open(AVStream *stream);
+     AVCodecContext *avctx() const;
+     void setCodec(AVCodec *c);
+-    AVCodec *codec() const;
++    const AVCodec *codec() const;
+     AVStream *stream() const;
+ 
+     QAVFrame decode(const AVPacket *pkt) const;
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p_p.h.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p_p.h
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p_p.h.omv~	2022-03-08 19:51:13.698270263 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavcodec_p_p.h	2022-03-08 19:51:22.242050235 +0100
+@@ -64,7 +64,7 @@ public:
+     virtual ~QAVCodecPrivate() = default;
+ 
+     AVCodecContext *avctx = nullptr;
+-    AVCodec *codec = nullptr;
++    const AVCodec *codec = nullptr;
+     AVStream *stream = nullptr;
+ };
+ 
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavdemuxer.cpp.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavdemuxer.cpp
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavdemuxer.cpp.omv~	2022-03-08 19:53:06.378367211 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavdemuxer.cpp	2022-03-08 19:53:23.577923873 +0100
+@@ -43,6 +43,10 @@
+ #include "qavhwdevice_p.h"
+ #include <QtMultimedia/private/qtmultimediaglobal_p.h>
+ 
++extern "C" {
++#include <libavcodec/avcodec.h>
++}
++
+ #if QT_CONFIG(va_x11) && QT_CONFIG(opengl)
+ #include "qavhwdevice_vaapi_x11_glx_p.h"
+ #endif
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_drm_egl.cpp.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_drm_egl.cpp
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_drm_egl.cpp.omv~	2022-03-08 19:54:10.756707527 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_drm_egl.cpp	2022-03-08 19:54:21.487430820 +0100
+@@ -50,6 +50,7 @@
+ #include <drm/drm_fourcc.h>
+ 
+ extern "C" {
++#include <libavcodec/avcodec.h>
+ #include <libavutil/hwcontext_vaapi.h>
+ }
+ 
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_x11_glx.cpp.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_x11_glx.cpp
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_x11_glx.cpp.omv~	2022-03-08 19:53:50.936218581 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavhwdevice_vaapi_x11_glx.cpp	2022-03-08 19:54:00.028984141 +0100
+@@ -48,6 +48,7 @@
+ 
+ extern "C" {
+ #include <libavutil/hwcontext_vaapi.h>
++#include <libavcodec/avcodec.h>
+ }
+ 
+ typedef void (*glXBindTexImageEXT_)(Display *dpy, GLXDrawable drawable, int buffer, const int *attrib_list);
+diff -up qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavvideocodec.cpp.omv~ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavvideocodec.cpp
+--- qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavvideocodec.cpp.omv~	2022-03-08 19:52:45.734899249 +0100
++++ qtmultimedia-everywhere-src-5.15.3/src/backends/avplayer/qavvideocodec.cpp	2022-03-08 19:52:55.445648983 +0100
+@@ -47,6 +47,7 @@
+ #include <QDebug>
+ 
+ extern "C" {
++#include <libavcodec/avcodec.h>
+ #include <libavutil/pixdesc.h>
+ }
+ 
