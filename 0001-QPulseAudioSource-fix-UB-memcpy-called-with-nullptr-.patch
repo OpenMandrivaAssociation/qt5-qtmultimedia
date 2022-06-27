@@ -1,0 +1,64 @@
+From 16d9ea642bf7b9592a6c53321cc7ee9d9a3ed03f Mon Sep 17 00:00:00 2001
+From: Marc Mutz <marc.mutz@qt.io>
+Date: Thu, 19 May 2022 12:02:04 +0200
+Subject: [PATCH] QPulseAudioSource: fix UB (memcpy() called with nullptr dest)
+ in read()
+
+deviceReady() calls read(nullptr, 0), but calling memcpy() with a
+nullpt destination is UB, even if the length is simulateneously zero.
+
+Ditto applyVolume() (called from read()).
+
+Fix by guarding the memcpy() calls.
+
+Add assertions to indicate that for these functions, nullptr is valid
+input iff length is zero.
+
+Found by clangsa's core.NonNullParamChecker.
+
+Pick-to: 6.3 6.2 5.15
+Change-Id: I9006b0e933e196a7a212e0ebe2bd27f6b9552518
+Reviewed-by: Rafael Roquetto <rafael.roquetto@qt.io>
+(cherry picked from commit 8df415d5bcf23462bedb4cb7601b909851ee15dd)
+---
+ src/plugins/pulseaudio/qaudioinput_pulse.cpp | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/plugins/pulseaudio/qaudioinput_pulse.cpp b/src/plugins/pulseaudio/qaudioinput_pulse.cpp
+index 2b5325132..b68b4af1b 100644
+--- a/src/plugins/pulseaudio/qaudioinput_pulse.cpp
++++ b/src/plugins/pulseaudio/qaudioinput_pulse.cpp
+@@ -402,6 +402,8 @@ int QPulseAudioInput::bytesReady() const
+ 
+ qint64 QPulseAudioInput::read(char *data, qint64 len)
+ {
++    Q_ASSERT(data != nullptr || len == 0);
++
+     m_bytesAvailable = checkBytesReady();
+ 
+     setError(QAudio::NoError);
+@@ -411,7 +413,8 @@ qint64 QPulseAudioInput::read(char *data, qint64 len)
+ 
+     if (!m_pullMode && !m_tempBuffer.isEmpty()) {
+         readBytes = qMin(static_cast<int>(len), m_tempBuffer.size());
+-        memcpy(data, m_tempBuffer.constData(), readBytes);
++        if (readBytes)
++            memcpy(data, m_tempBuffer.constData(), readBytes);
+         m_totalTimeValue += readBytes;
+ 
+         if (readBytes < m_tempBuffer.size()) {
+@@ -502,9 +505,10 @@ qint64 QPulseAudioInput::read(char *data, qint64 len)
+ 
+ void QPulseAudioInput::applyVolume(const void *src, void *dest, int len)
+ {
++    Q_ASSERT((src && dest) || len == 0);
+     if (m_volume < 1.f)
+         QAudioHelperInternal::qMultiplySamples(m_volume, m_format, src, dest, len);
+-    else
++    else if (len)
+         memcpy(dest, src, len);
+ }
+ 
+-- 
+2.36.1
+
