@@ -1,4 +1,4 @@
-From 76f84c545429a1b988b79f971734ef4bc3e6643f Mon Sep 17 00:00:00 2001
+From f3dc18968c437c993886d3bfb668b62344a10860 Mon Sep 17 00:00:00 2001
 From: Marc Mutz <marc.mutz@qt.io>
 Date: Thu, 19 May 2022 12:02:04 +0200
 Subject: [PATCH] QPulseAudioSource: fix UB (memcpy() called with nullptr dest)
@@ -60,5 +60,5 @@ index 2b5325132..b68b4af1b 100644
  }
  
 -- 
-2.37.2
+2.38.1
 
