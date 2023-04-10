@@ -1,8 +1,8 @@
-From 0d7cc33ac1404758886acef4f804b788c6774e98 Mon Sep 17 00:00:00 2001
+From 34fa54c09cf8a8e7b128392ca31bff8c2d7a2322 Mon Sep 17 00:00:00 2001
 From: Marc Mutz <marc.mutz@qt.io>
 Date: Thu, 19 May 2022 12:02:04 +0200
-Subject: [PATCH] QPulseAudioSource: fix UB (memcpy() called with nullptr dest)
- in read()
+Subject: [PATCH 1/3] QPulseAudioSource: fix UB (memcpy() called with nullptr
+ dest) in read()
 
 deviceReady() calls read(nullptr, 0), but calling memcpy() with a
 nullpt destination is UB, even if the length is simulateneously zero.
@@ -60,5 +60,5 @@ index 2b5325132..b68b4af1b 100644
  }
  
 -- 
-2.38.1
+2.40.0.rc2
 
