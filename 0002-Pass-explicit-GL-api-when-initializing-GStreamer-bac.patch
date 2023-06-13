@@ -1,4 +1,4 @@
-From f291fb880b94d2f0b26af9d03dcc8f7e1f4549c6 Mon Sep 17 00:00:00 2001
+From 23c587dd5f1b128466965fb3bf89e078baa56d23 Mon Sep 17 00:00:00 2001
 From: Joshua Goins <josh@redstrate.com>
 Date: Sun, 22 Jan 2023 10:39:59 -0500
 Subject: [PATCH 2/3] Pass explicit GL api when initializing GStreamer backend
@@ -26,5 +26,5 @@ index 4000f2178..a446d93fe 100644
          qWarning() << "Could not create wrappped context for platform:" << glPlatform;
  
 -- 
-2.40.0.rc2
+2.41.0.rc2
 
