@@ -1,7 +1,7 @@
-From 78d05cfcec57a9e890cb5ddbea604f194e04315d Mon Sep 17 00:00:00 2001
+From f587b18db4abd68cb6d4d77fbcec1b94c38d2a51 Mon Sep 17 00:00:00 2001
 From: Andreas Sturmlechner <asturm@gentoo.org>
 Date: Fri, 17 Sep 2021 10:14:42 +0200
-Subject: [PATCH 3/3] Drop obsolete QtOpengl dependency
+Subject: [PATCH 2/2] Drop obsolete QtOpengl dependency
 
 Widgets were ported away from QtOpenGL in 5.15.0 but bogus dependency
 remained (commit 30034a140ca8aefa1986c9964ae1f30dcfef886e).
@@ -30,5 +30,5 @@ index 1919e8107..4c30d8fbf 100644
  PRIVATE_HEADERS += \
      qvideowidget_p.h \
 -- 
-2.41.0.rc2
+2.42.0
 

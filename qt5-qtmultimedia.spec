@@ -34,7 +34,7 @@
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
-Version:	5.15.10
+Version:	5.15.11
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 %define qttarballdir qtmultimedia-everywhere-src-%{version}-%{beta}
@@ -53,9 +53,8 @@ Source101:	qtavplayer-fix-build.patch
 # With ffmpeg 5.0 too
 Source102:	qtmultimedia-avplayer-ffmpeg-5.0.patch
 # Patches from KDE
-Patch1001:	0001-QPulseAudioSource-fix-UB-memcpy-called-with-nullptr-.patch
-Patch1002:	0002-Pass-explicit-GL-api-when-initializing-GStreamer-bac.patch
-Patch1003:	0003-Drop-obsolete-QtOpengl-dependency.patch
+Patch1001:	0001-Pass-explicit-GL-api-when-initializing-GStreamer-bac.patch
+Patch1002:	0002-Drop-obsolete-QtOpengl-dependency.patch
 Summary:	Qt GUI toolkit
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
