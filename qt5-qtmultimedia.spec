@@ -1,9 +1,3 @@
-%ifarch %{aarch64}
-%bcond_with avplayer
-%else
-%bcond_without avplayer
-%endif
-
 %define api %(echo %{version} |cut -d. -f1)
 %define major %api
 %define beta %{nil}
@@ -28,9 +22,6 @@
 %define qtmultimediawidgetsd %mklibname qt%{api}multimediawidgets -d
 %define qtmultimediawidgets_p_d %mklibname qt%{api}multimediawidgets-private -d
 
-%define qtmultimediaavplayer %mklibname qt%{api}multimediaavplayer %{major}
-%define qtmultimediaavplayerd %mklibname qt%{api}multimediaavplayer -d
-
 %define _qt5_prefix %{_libdir}/qt%{api}
 
 Name:		qt5-qtmultimedia
@@ -44,14 +35,6 @@ Release:	1
 %define qttarballdir qtmultimedia-everywhere-opensource-src-%{version}
 Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 %endif
-# Introduce an alternative to ****ing dreadful gstreamer crap
-# that can't even handle the pinephone camera
-# https://codereview.qt-project.org/c/qt/qtmultimedia/+/305276
-Source100:	bcc261c.diff
-# And make it compile...
-Source101:	qtavplayer-fix-build.patch
-# With ffmpeg 5.0 too
-Source102:	qtmultimedia-avplayer-ffmpeg-5.0.patch
 # Patches from KDE
 %(P=1001; cd %{_sourcedir}; for i in [0-9][0-9][0-9][0-9]-*.patch; do echo -e "Patch$P:\t$i"; P=$((P+1)); done)
 Summary:	Qt GUI toolkit
@@ -74,19 +57,6 @@ BuildRequires:	pkgconfig(Qt5Quick) = %version
 Provides:	qml(QtMultimedia) = %version
 # For the Provides: generator
 BuildRequires:	cmake >= 3.11.0-1
-%if %{with avplayer}
-BuildRequires:	pkgconfig(libavcodec)
-BuildRequires:	pkgconfig(libavformat)
-BuildRequires:	pkgconfig(libavutil)
-BuildRequires:	pkgconfig(libswresample)
-BuildRequires:	pkgconfig(xext)
-BuildRequires:	pkgconfig(libva-x11)
-BuildRequires:	pkgconfig(libva-drm)
-BuildRequires:	pkgconfig(libva)
-BuildRequires:	pkgconfig(egl)
-BuildRequires:	pkgconfig(gl)
-BuildRequires:	pkgconfig(libpulse)
-%endif
 
 %description
 Qt is a GUI software toolkit which simplifies the task of writing and
@@ -271,44 +241,10 @@ Devel files needed to build apps based on QtMultimedia Quick.
 %{_libdir}/cmake/Qt5MultimediaQuick
 
 #------------------------------------------------------------------------------
-%if %{with avplayer}
-%package -n %{qtmultimediaavplayer}
-Summary: Qt%{api} multimedia lib with FFMPEG backend
-Group: System/Libraries
-
-%description -n %{qtmultimediaavplayer}
-Qt%{api} multimedia lib with FFMPEG backend.
-
-%files -n %{qtmultimediaavplayer}
-%{_libdir}/libQt5MultimediaAVPlayer.so.5*
-
-%package -n %{qtmultimediaavplayerd}
-Summary: Devel files needed to build apps based on QtMultimediaAVPlayer
-Group:    Development/KDE and Qt
-Requires: %{qtmultimediaavplayer} = %{EVRD}
-Requires: %{qtmultimediawidgetsd} = %{EVRD}
-
-%description -n %{qtmultimediaavplayerd}
-Devel files needed to build apps based on QtMultimediaAVPlayer
-
-%files -n %{qtmultimediaavplayerd}
-%{_qt5_includedir}/QtMultimediaAVPlayer
-%{_libdir}/cmake/Qt5MultimediaAVPlayer/Qt5MultimediaAVPlayerConfig.cmake
-%{_libdir}/cmake/Qt5MultimediaAVPlayer/Qt5MultimediaAVPlayerConfigVersion.cmake
-%{_libdir}/libQt5MultimediaAVPlayer.prl
-%{_libdir}/libQt5MultimediaAVPlayer.so
-%{_libdir}/qt5/mkspecs/modules/qt_lib_multimediaavplayer_private.pri
-%endif
-#------------------------------------------------------------------------------
 
 
 %prep
 %autosetup -n %(echo %qttarballdir |sed -e 's,-opensource,,') -p1
-%if %{with avplayer}
-patch -p1 -z .avp1~ -b <%{S:100}
-patch -p1 -z .avp2~ -b <%{S:101}
-patch -p1 -z .avp2~ -b <%{S:102}
-%endif
 
 # Needed after introducing extra headers from Patch0
 %{_libdir}/qt5/bin/syncqt.pl -version %{version}
@@ -316,9 +252,7 @@ patch -p1 -z .avp2~ -b <%{S:102}
 %qmake_qt5 GST_VERSION=1.0
 
 %build
-# "|| make" is a workaround for Makefiles that aren't 100% SMP clean
-# needed as of 5.15.2 with the avplayer patch
-%make_build || make
+%make_build
 
 %install
 %make_install INSTALL_ROOT=%{buildroot}
