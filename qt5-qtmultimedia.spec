@@ -40,7 +40,7 @@ Source0:	http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f
 Summary:	Qt GUI toolkit
 Group:		Development/KDE and Qt
 License:	LGPLv2 with exceptions or GPLv3 with exceptions and GFDL
-URL:		http://www.qt.io
+URL:		https://www.qt.io
 BuildRequires:	qt5-qtbase-devel = %version
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(libpulse)
