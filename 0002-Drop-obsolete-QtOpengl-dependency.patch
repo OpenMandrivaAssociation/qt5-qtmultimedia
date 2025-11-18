@@ -1,4 +1,4 @@
-From 85fe63b98703ced6c5568c52af77b50e6ddf1edc Mon Sep 17 00:00:00 2001
+From ff83d119c75cd8406f73ccc08958fe36747e7390 Mon Sep 17 00:00:00 2001
 From: Andreas Sturmlechner <asturm@gentoo.org>
 Date: Fri, 17 Sep 2021 10:14:42 +0200
 Subject: [PATCH 2/2] Drop obsolete QtOpengl dependency
@@ -30,5 +30,5 @@ index 1919e8107..4c30d8fbf 100644
  PRIVATE_HEADERS += \
      qvideowidget_p.h \
 -- 
-2.46.0
+2.51.2
 
