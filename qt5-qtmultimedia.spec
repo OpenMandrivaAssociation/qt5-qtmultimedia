@@ -53,6 +53,7 @@ BuildRequires:	pkgconfig(Qt5Core) = %version
 BuildRequires:	pkgconfig(Qt5Gui) = %version
 BuildRequires:	pkgconfig(Qt5Qml) = %version
 BuildRequires:	pkgconfig(Qt5Quick) = %version
+BuildRequires:	make
 # FIXME the autogenerator doesn't see the correct version number
 Provides:	qml(QtMultimedia) = %version
 # For the Provides: generator
